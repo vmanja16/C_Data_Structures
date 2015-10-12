@@ -1,0 +1,190 @@
+// quickSort.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <assert.h>
+
+void quickSort( int[], int, int);
+void Insertionsort(int [], int );
+int partition( int[], int, int);
+void sort(int list[], int n);
+
+void sort(int list[], int n)
+{
+  int i=0, j=0;
+  int count = 0; 
+ 
+  printf(" N is = %d\n", n);
+
+   for (j = 0; j <= 7; j++)
+   {
+    i = j * n/10;
+    while(list[i] <= list[i+1])
+        { 
+          if (i ==(n-1) ) {break;}
+          count++; 
+          i++; 
+        if (count > n/5) {break;}
+
+        }
+   }
+   printf(" COUNT IS %d\n", count );
+
+  if (count > n/5) 
+  {
+    printf(" RUNNING INSERTION SORT\n");
+  
+  Insertionsort( list, n);
+  }
+  else 
+  {
+      printf(" RUNNING QUICK SORT\n");
+
+        quickSort( list, 0,n-1);
+  }
+  
+}
+
+
+void Insertionsort(int list[], int n) 
+{
+   int I = 0;
+   int J = 0;
+   int Temp = 0;
+
+  for (I = 1; I < n; I++)
+  { 
+      J = I;
+      while ( (J > 0) && (list[J] < list[J-1]) ) 
+   {
+     Temp = list[J-1];
+    list[J-1] = list[J];
+    list[J] = Temp;
+    J--;
+    }
+
+  }
+
+}
+
+
+void quickSort( int a[], int lb, int ub)
+{
+   int i;
+
+   if( lb < ub ) 
+   {
+       i = partition( a, lb, ub);
+       quickSort( a, lb, i-1);
+       quickSort( a, i+1, ub);
+   }
+  
+}
+
+
+
+int partition( int a[], int lb, int ub) 
+{
+   int pivot, Left, Right, temp, index;
+  // pivot = a[lb];
+
+   index =  lb + (ub-lb)/2 ;  // Middle pivot
+   pivot = a[index];
+
+   Left = lb; Right = ub;
+    
+   while( Left <= Right)
+   {
+      while( (a[Left] <= pivot) && (Left <= Right) ){Left++;} // move left
+      while( (a[Right] > pivot) ) {Right--;}             // move right
+   
+    
+      if ( Right < Left){break;}
+
+      if ( Right == index) { index = Left;}
+    
+    
+      temp = a[Left];
+      a[Left] = a[Right];
+      a[Right] = temp; 
+      
+    }
+
+   //temp = pivot;         // exchange pivot w/ right
+   a[ index] = a[Right]; 
+   a[Right] = pivot;
+   return Right;      // Right is index of positioned pivot
+}
+
+
+
+
+
+int main() 
+{
+	int n = 1000000;
+  int a[n], b[n];
+  int i = 0;
+  int t = 0; int J = n-1;
+
+
+	srand( time(NULL) );		
+    for(i=0;i<n;i++){a[i] = rand(); b[i] = rand();} 
+
+  clock_t start, end;
+  double QUICKTIME;
+
+/*--------------------------RANDOM----------------------*/
+  start = clock();
+  sort(b,n); 
+  end = clock();
+  QUICKTIME = (double)(end-start)/( (double) CLOCKS_PER_SEC);
+  printf("\n\n random list time = %lf\n\n", QUICKTIME);
+
+  for (i = 1; i < n; i++){assert (b[i] >= b[i-1]);} //CHECK if Sorted
+
+
+
+	start = clock();
+  sort(a,n); 
+  end = clock();
+	QUICKTIME = (double)(end-start)/( (double) CLOCKS_PER_SEC);
+	printf("\n\n random list time = %lf\n\n", QUICKTIME);
+
+  for (i = 1; i < n; i++){assert (a[i] >= a[i-1]);} //CHECK if Sorted
+
+/*---------------------------SORTED-----------------------------*/
+  start = clock();
+  sort(a,n); 
+  end = clock();
+        QUICKTIME = (double)(end-start)/( (double) CLOCKS_PER_SEC);
+        printf("\n\n  FULLY sorted list time = %lf\n\n", QUICKTIME);
+
+
+
+	for (i = 1; i < n; i++)//{printf("%d\n ", a[i]);
+    {assert (a[i] >= a[i-1]);} //CHECK if Sorted
+
+	/*--------------REVERSE SORTED-----------------*/
+	for ( i = 0; i< n/2; i++) { t=a[J]; a[J]=a[i]; a[i]=t; J--;}  
+  start = clock();
+  sort(a,n);
+	end = clock();
+        QUICKTIME = (double)(end-start)/( (double) CLOCKS_PER_SEC);
+        printf("\n\n  Reverse sorted list time = %lf\n\n", QUICKTIME);
+
+  for (i = 1; i < n; i++){assert (a[i] >= a[i-1]);} //CHECK if Sorted
+      
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
